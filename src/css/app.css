@@ -1,6 +1,6 @@
-@import "./_layout.css";
-@import "./_transitions.css";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "./_transitions.css";
+@import "./_layout.css";
 @import 'tailwindcss';
 @import "tw-animate-css";
 
