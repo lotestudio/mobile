@@ -2,6 +2,10 @@
 
 import {useRoute} from "vue-router";
 import BackLink from "@/components/BackLink.vue";
+import PageHeader from "@/components/PageHeader.vue";
+import {ChevronLeft, EllipsisVertical} from "lucide-vue-next";
+
+
 const route = useRoute()
 </script>
 
@@ -9,14 +13,16 @@ const route = useRoute()
 
 <template>
   <div>
-    <header class="app-header p-4 flex justify-between shrink-0">
-      <BackLink>
-        Back
+    <header class="p-4 flex justify-between shrink-0">
+      <BackLink class="w-1/6 flex justify-start">
+        <ChevronLeft class="size-6" />
       </BackLink>
-      <div class="flex-1 text-center">App</div>
-      <div>R</div>
+      <div class="flex-1 text-center">Product</div>
+      <div class="w-1/6 flex justify-end">
+        <EllipsisVertical class="size-6" />
+      </div>
     </header>
-    <h1 class="text-2xl font-bold">Product {{route.params.id}}</h1>
+    <PageHeader title="Name of the Product"/>
   </div>
 </template>
 

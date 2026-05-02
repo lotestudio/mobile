@@ -1,16 +1,21 @@
 <template>
   <div class="relative text-shade-100 text-primary">
     <Transition name="slide-up">
-
-      <div v-if="!dark" @click="toggle" class="i-moon absolute text-xl">1</div>
-      <div v-else @click="toggle" class="i-sun absolute text-xl">2</div>
-
+      <div v-if="!dark" @click="toggle" class="absolute">
+        <MoonStar class="size-6" />
+      </div>
+      <div v-else @click="toggle" class="absolute">
+        <Sun class="size-6" />
+      </div>
     </Transition>
   </div>
 </template>
 
 <script setup>
 import {ref} from 'vue'
+import {Sun, MoonStar } from 'lucide-vue-next'
+
+
 //init
 let dark=ref(!!localStorage.getItem('dark') || false)
 if(dark.value){

@@ -5,10 +5,7 @@ import PageHeader from "@/components/PageHeader.vue";
 
 <template>
   <div>
-    <PageHeader title="Settings"/>
-    <div class="px-4">
-    <ThemeSwitcher/>
-    </div>
+    <PageHeader title="More"/>
   </div>
 </template>
 
