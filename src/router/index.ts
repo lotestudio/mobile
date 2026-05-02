@@ -5,14 +5,15 @@ import Catalog from "@/views/Catalog.vue";
 import Settings from "@/views/Settings.vue";
 import Product from "@/views/Product.vue";
 import More from "@/views/More.vue";
+import Carousel from "@/views/Carousel.vue";
 
 const routes = [
   { path: '/', component: Home, meta: { nav: true }},
   { path: '/catalog', component: Catalog, meta: { nav: true }},
   { path: '/settings', component: Settings, meta: { nav: true }},
   { path: '/more', component: More, meta: { nav: true }},
-
   { path: '/product/:id', component: Product},
+  { path: '/carousel', component: Carousel},
 ]
 
 const router = createRouter({
