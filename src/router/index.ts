@@ -23,11 +23,24 @@ const router = createRouter({
 
 
 router.afterEach((to, from) => {
+
+  if(from.meta.nav && !to.meta.nav) {
+    to.meta.transition ='slide-left';
+    return;
+  }
+
+  if(!from.meta.nav && to.meta.nav) {
+    to.meta.transition ='slide-right';
+    return;
+  }
+
+
   const toDepth = to.path.split('/').length
   const fromDepth = from.path.split('/').length
-  if(toDepth !== fromDepth) {
+  if (toDepth !== fromDepth) {
     to.meta.transition = toDepth < fromDepth ? 'slide-right' : 'slide-left'
   }
+
 })
 
 export default router

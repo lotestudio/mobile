@@ -205,7 +205,4 @@ function onViewTouchEnd(event: TouchEvent) {
   text-decoration: underline;
   text-underline-offset: 0.5rem;
 }
-
-
-
 </style>

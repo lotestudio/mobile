@@ -1,6 +1,6 @@
 <template>
   <div class="relative text-shade-100 text-primary">
-    <Transition name="slide-up">
+    <Transition name="slide-rotate-up">
       <div v-if="!dark" @click="toggle" class="absolute">
         <MoonStar class="size-6" />
       </div>
@@ -38,18 +38,18 @@ let toggle=()=>{
 </script>
 
 
-<style>
-.slide-up-enter-active,
-.slide-up-leave-active {
+<style scoped>
+.slide-rotate-up-enter-active,
+.slide-rotate-up-leave-active {
   transition: all 0.25s ease-out;
 }
 
-.slide-up-enter-from {
+.slide-rotate-up-enter-from {
   opacity: 0;
   transform: translateY(30px) rotate(-120deg);
 }
 
-.slide-up-leave-to {
+.slide-rotate-up-leave-to {
   opacity: 0;
   transform: translateY(-30px) rotate(120deg);
 }
