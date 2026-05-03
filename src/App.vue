@@ -10,7 +10,11 @@
     <main class="app-main">
       <router-view v-slot="{ Component, route }">
         <transition :name="route.meta.transition as string">
-        <component :is="Component" :key="route.fullPath" class="route-page" />
+        <component :is="Component"
+                   :key="route.fullPath"
+                   class="route-page"
+                   :style="route.meta.nav ? 'padding-bottom: var(--nav-offset)' : ''"
+        />
         </transition>
       </router-view>
     </main>

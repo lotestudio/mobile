@@ -39,6 +39,7 @@ import PageHeader from "@/components/PageHeader.vue";
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+    <p>------- Last --------</p>
     </div>
   </div>
 </template>
