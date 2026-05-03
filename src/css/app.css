@@ -45,9 +45,21 @@
 }
 
 :root {
+
+  /* iOS system background */
+  --ios-background: oklch(1 0 0); /* #FFFFFF */
+
+  /* iOS secondary/grouped background */
+  --ios-grouped-background: oklch(0.967 0.003 264.542); /* #F2F2F7 */
+
+  /* iOS secondary system background */
+  --ios-secondary-background: oklch(0.982 0.002 247.839); /* #F9F9FB приблизително */
+
+
   --nav-offset: 75px;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  /*--background: oklch(1 0 0);*/
+  --background: var(--ios-grouped-background);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);

@@ -20,10 +20,10 @@
     </main>
 
     <AppNav>
-      <AppNavItem :icon="Folders" label="Home" to="/"/>
-      <AppNavItem :icon="Folders" label="Catalog" to="/catalog"/>
-      <AppNavItem :icon="Folders" label="Settings" to="/settings"/>
-      <AppNavItem :icon="MenuSquareIcon" label="More" to="/more"/>
+      <AppNavItem :icon="Folders" label="Начало" to="/"/>
+      <AppNavItem :icon="Folders" label="Клиенти" to="/catalog"/>
+      <AppNavItem :icon="Folders" label="Настройки" to="/settings"/>
+      <AppNavItem :icon="MenuSquareIcon" label="Още" to="/more"/>
     </AppNav>
   </div>
 </template>
