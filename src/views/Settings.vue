@@ -6,7 +6,6 @@ import PageHeader from "@/components/PageHeader.vue";
 <template>
   <div>
     <PageHeader title="Настройки"/>
-
     <div class="p-4">
       <div class="px-4 h-8">
         <ThemeSwitcher/>
@@ -20,11 +19,7 @@ import PageHeader from "@/components/PageHeader.vue";
         <p class="text-muted-foreground uppercase text-xs">Description text</p>
         <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, numquam.</p>
       </div>
-
     </div>
-
-
-
   </div>
 </template>
 

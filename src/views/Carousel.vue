@@ -37,12 +37,14 @@ function getCenteredSlideScrollLeft(index: number) {
 function scrollActiveLinkIntoView(index: number) {
   nextTick(() => {
     const activeLink = linksCarousel.value?.children[index] as HTMLElement | undefined;
+    setTimeout(()=>{
+      activeLink?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      })
 
-    activeLink?.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
-    });
+    },80)
   });
 }
 
@@ -98,7 +100,7 @@ function onViewTouchStart(event: TouchEvent) {
 function onViewTouchEnd(event: TouchEvent) {
   const touchEndX = event.changedTouches[0]?.clientX ?? 0;
   const deltaX = touchStartX.value - touchEndX;
-  const swipeThreshold = 40;
+  const swipeThreshold = 60;
 
   if (Math.abs(deltaX) < swipeThreshold) return;
 
@@ -145,7 +147,18 @@ function onViewTouchEnd(event: TouchEvent) {
           :key="index"
           class="swipe-view"
       >
-        {{ index + 1 }}
+        <div class="p-2">
+          {{ index + 1 }}
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -174,11 +187,10 @@ function onViewTouchEnd(event: TouchEvent) {
   scroll-snap-align: center;
   height: 100%;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex: 0 0 auto;
   color: var(--primary);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 
