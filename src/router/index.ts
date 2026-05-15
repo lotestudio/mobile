@@ -5,7 +5,9 @@ import Catalog from "@/views/Catalog.vue";
 import Settings from "@/views/Settings.vue";
 import Product from "@/views/Product.vue";
 import More from "@/views/More.vue";
-import Carousel from "@/views/Carousel.vue";
+import CarouselView from "@/views/DemoUI/CarouselView.vue";
+import Blocks from "@/views/DemoUI/Blocks.vue";
+import Lists from "@/views/DemoUI/Lists.vue";
 
 const routes = [
   { path: '/', component: Home, meta: { nav: true }},
@@ -13,7 +15,9 @@ const routes = [
   { path: '/settings', component: Settings, meta: { nav: true }},
   { path: '/more', component: More, meta: { nav: true }},
   { path: '/product/:id', component: Product},
-  { path: '/carousel', component: Carousel},
+  { path: '/demo_ui/carousel', component: CarouselView},
+  { path: '/demo_ui/blocks', component: Blocks},
+  { path: '/demo_ui/lists', component: Lists},
 ]
 
 const router = createRouter({
@@ -22,7 +26,7 @@ const router = createRouter({
 })
 
 
-router.afterEach((to, from) => {
+router.beforeEach((to, from) => {
 
   if(from.meta.nav && !to.meta.nav) {
     to.meta.transition ='slide-left';

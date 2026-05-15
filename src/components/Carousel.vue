@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { nextTick, ref } from "vue";
-import { ChevronLeft, EllipsisVertical } from "lucide-vue-next";
-import BackLink from "@/components/BackLink.vue";
+import {nextTick, onMounted, ref, watch, type Component} from "vue";
 
-function generateLinks(count: number) {
-  return Array.from({ length: count }, (_, index) => `Link ${index + 1}`);
+interface CarouselView {
+  label: string;
+  component: Component;
+  props?: Record<string, unknown>
 }
 
-const links = generateLinks(50);
+const props = defineProps<{
+  views: CarouselView[];
+  active: number
+}>()
 
-const activeIndex = ref(0);
+const activeIndex = ref(props.active ?? 0);
 const linksCarousel = ref<HTMLElement | null>(null);
 const viewsCarousel = ref<HTMLElement | null>(null);
 
@@ -80,7 +83,7 @@ function onViewsScroll() {
 function goToSlide(index: number) {
   if (!viewsCarousel.value) return;
 
-  const normalizedIndex = Math.max(0, Math.min(index, links.length - 1));
+  const normalizedIndex = Math.max(0, Math.min(index, props.views.length - 1));
 
   isProgrammaticScroll.value = true;
   setActiveIndex(normalizedIndex);
@@ -108,30 +111,70 @@ function onViewTouchEnd(event: TouchEvent) {
 
   goToSlide(activeIndex.value + direction);
 }
+
+watch(
+  activeIndex,
+  (value, oldValue, onCleanup) => {
+
+    nextTick(() => {
+      const carousel = linksCarousel.value;
+      const activeLink = carousel?.children[value] as HTMLElement | undefined;
+      const oldLink = carousel?.children[oldValue] as HTMLElement | undefined;
+
+      if (!carousel || !activeLink || !oldLink) return;
+      const newTabWidth = activeLink.offsetWidth/carousel.offsetWidth;
+      const newTabPosition = oldLink?.compareDocumentPosition(activeLink);
+
+      let transitionWidth=0;
+      //to right
+      if(newTabPosition ===4){
+        transitionWidth = activeLink.offsetLeft + activeLink.offsetWidth  - oldLink.offsetLeft ;
+      }
+
+      //to left
+      if(newTabPosition ===2){
+        transitionWidth = oldLink.offsetLeft + oldLink.offsetWidth  - activeLink.offsetLeft;
+        carousel.style.setProperty("--_left", `${activeLink.offsetLeft}px`);
+      }
+
+      carousel.style.setProperty("--_width", transitionWidth /carousel.offsetWidth+'');
+
+      setTimeout(()=>{
+        carousel.style.setProperty("--_left", `${activeLink.offsetLeft}px`);
+        carousel.style.setProperty("--_width", newTabWidth+'');
+      },220)
+
+    });
+  },
+    {immediate:true}
+)
+
+//
+// onMounted(()=>{
+//
+//   const carousel = linksCarousel.value;
+//   const activeLink = carousel?.children[activeIndex.value] as HTMLElement | undefined;
+//
+//   if(!activeLink || !carousel) return;
+//   const newTabWidth = activeLink.offsetWidth/carousel.offsetWidth;
+//   carousel.style.setProperty("--_left", `${activeLink.offsetLeft}px`);
+//   carousel.style.setProperty("--_width", newTabWidth+'');
+//
+// });
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <header class="p-4 flex justify-between shrink-0">
-      <BackLink class="w-1/6 flex justify-start">
-        <ChevronLeft class="size-6" />
-      </BackLink>
-      <div class="flex-1 text-center">Product</div>
-      <div class="w-1/6 flex justify-end">
-        <EllipsisVertical class="size-6" />
-      </div>
-    </header>
-
-    <div ref="linksCarousel" class="carousel">
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <div ref="linksCarousel" class="carousel carousel-links border-b border-b-border">
       <button
-          v-for="(link, index) in links"
-          :key="link"
+          v-for="(view, index) in views"
+          :key="view.label"
           type="button"
           class="swipe-links"
           :class="{ active: activeIndex === index }"
           @click="goToSlide(index)"
       >
-        {{ link }}
+        {{ view.label }}
       </button>
     </div>
 
@@ -143,22 +186,11 @@ function onViewTouchEnd(event: TouchEvent) {
         @touchend.passive="onViewTouchEnd"
     >
       <div
-          v-for="(_, index) in links"
-          :key="index"
+          v-for="(view, index) in views"
+          :key="view.label"
           class="swipe-view"
       >
-        <div class="p-2">
-          {{ index + 1 }}
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, dolorum minus nobis saepe tenetur vero voluptatum? Debitis dolor dolores eaque explicabo iste iusto neque sed sequi sit suscipit. A, earum.</p>
-        </div>
+        <component :is="view.component" v-bind="view.props"/>
       </div>
     </div>
   </div>
@@ -175,6 +207,25 @@ function onViewTouchEnd(event: TouchEvent) {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.carousel-links{
+  position:relative;
+  background: var(--card);
+}
+
+.carousel-links::after{
+  position:absolute;
+  content: '';
+  left:0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  scale:var(--_width,10%) 1;
+  translate: var(--_left, 0px) 0;
+  transform-origin: left;
+  transition: scale 200ms, translate 200ms;
+  background: var(--accent);
 }
 
 .views-carousel {
@@ -204,7 +255,7 @@ function onViewTouchEnd(event: TouchEvent) {
 .swipe-links {
   scroll-snap-align: center;
   padding-inline: 2rem;
-  padding-block: 1rem;
+  padding-bottom: 0.5rem;
   flex: 0 0 auto;
   white-space: nowrap;
   color: var(--muted-foreground);
@@ -214,7 +265,5 @@ function onViewTouchEnd(event: TouchEvent) {
 .swipe-links.active {
   color: var(--primary);
   font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 0.5rem;
 }
 </style>
