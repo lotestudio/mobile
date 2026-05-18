@@ -17,6 +17,9 @@ const linksCarousel = ref<HTMLElement | null>(null);
 const viewsCarousel = ref<HTMLElement | null>(null);
 
 const touchStartX = ref(0);
+const touchCurrentX = ref(0);
+const touchStartScrollLeft = ref(0);
+const isDraggingView = ref(false);
 const isProgrammaticScroll = ref(false);
 let programmaticScrollTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -97,15 +100,50 @@ function goToSlide(index: number) {
 }
 
 function onViewTouchStart(event: TouchEvent) {
+  const carousel = viewsCarousel.value;
+
+  if (!carousel) return;
+
   touchStartX.value = event.touches[0]?.clientX ?? 0;
+  touchCurrentX.value = touchStartX.value;
+  touchStartScrollLeft.value = carousel.scrollLeft;
+  isDraggingView.value = true;
+
+  carousel.style.scrollBehavior = "auto";
+}
+
+function onViewTouchMove(event: TouchEvent) {
+  const carousel = viewsCarousel.value;
+  const threshold = 30;
+
+  if (!carousel || !isDraggingView.value) return;
+
+  touchCurrentX.value = event.touches[0]?.clientX ?? touchStartX.value;
+
+  const deltaX = touchStartX.value - touchCurrentX.value;
+
+  if(Math.abs(deltaX)>threshold)
+  {
+    carousel.scrollLeft = touchStartScrollLeft.value + deltaX - (threshold*Math.sign(deltaX));
+  }
 }
 
 function onViewTouchEnd(event: TouchEvent) {
-  const touchEndX = event.changedTouches[0]?.clientX ?? 0;
+  const carousel = viewsCarousel.value;
+
+  if (!carousel) return;
+
+  const touchEndX = event.changedTouches[0]?.clientX ?? touchCurrentX.value;
   const deltaX = touchStartX.value - touchEndX;
   const swipeThreshold = 60;
 
-  if (Math.abs(deltaX) < swipeThreshold) return;
+  isDraggingView.value = false;
+  carousel.style.scrollBehavior = "";
+
+  if (Math.abs(deltaX) < swipeThreshold) {
+    goToSlide(activeIndex.value);
+    return;
+  }
 
   const direction = deltaX > 0 ? 1 : -1;
 
@@ -119,7 +157,7 @@ watch(
     nextTick(() => {
       const carousel = linksCarousel.value;
       const activeLink = carousel?.children[value] as HTMLElement | undefined;
-      const oldLink = carousel?.children[oldValue] as HTMLElement | undefined;
+      const oldLink = carousel?.children[oldValue ?? 0] as HTMLElement | undefined;
 
       if (!carousel || !activeLink || !oldLink) return;
       const newTabWidth = activeLink.offsetWidth/carousel.offsetWidth;
@@ -149,18 +187,31 @@ watch(
     {immediate:true}
 )
 
-//
-// onMounted(()=>{
-//
-//   const carousel = linksCarousel.value;
-//   const activeLink = carousel?.children[activeIndex.value] as HTMLElement | undefined;
-//
-//   if(!activeLink || !carousel) return;
-//   const newTabWidth = activeLink.offsetWidth/carousel.offsetWidth;
-//   carousel.style.setProperty("--_left", `${activeLink.offsetLeft}px`);
-//   carousel.style.setProperty("--_width", newTabWidth+'');
-//
-// });
+
+onMounted(()=>{
+
+  const lCarousel = linksCarousel.value;
+  const activeLink = lCarousel?.children[activeIndex.value] as HTMLElement | undefined;
+
+  if(!activeLink || !lCarousel) return;
+
+  const newTabWidth = activeLink.offsetWidth/lCarousel.offsetWidth;
+  lCarousel.style.setProperty("--_left", `${activeLink.offsetLeft}px`);
+  lCarousel.style.setProperty("--_width", newTabWidth+'');
+
+  lCarousel.style.scrollBehavior = "auto";
+  lCarousel.scrollLeft=activeLink.offsetLeft-lCarousel.offsetWidth/2
+  lCarousel.style.scrollBehavior = "";
+
+  const vCarousel = viewsCarousel.value;
+
+  if (!vCarousel) return;
+
+  vCarousel.style.scrollBehavior = "auto";
+  vCarousel.scrollLeft = getCenteredSlideScrollLeft(activeIndex.value);
+  vCarousel.style.scrollBehavior = "";
+
+});
 </script>
 
 <template>
@@ -183,6 +234,7 @@ watch(
         class="carousel views-carousel flex-1"
         @scroll="onViewsScroll"
         @touchstart.passive="onViewTouchStart"
+        @touchmove.passive="onViewTouchMove"
         @touchend.passive="onViewTouchEnd"
     >
       <div
